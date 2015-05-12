@@ -42,8 +42,11 @@ namespace msg_gen
 
         private static void explode(ref List<string> m, ref List<string> s, string path)
         {
-            m.AddRange(Directory.EnumerateFiles(path, "*.msg", SearchOption.AllDirectories).Except(m).ToList());
-            s.AddRange(Directory.EnumerateFiles(path, "*.srv", SearchOption.AllDirectories).Except(s).ToList());
+			m.AddRange(Directory.GetFiles(path, "*.msg", SearchOption.AllDirectories).Except(m).ToList());
+			s.AddRange(Directory.GetFiles(path, "*.srv", SearchOption.AllDirectories).Except(s).ToList());
+
+            //m.AddRange(Directory.EnumerateFiles(path, "*.msg", SearchOption.AllDirectories).Except(m).ToList());
+            //s.AddRange(Directory.EnumerateFiles(path, "*.srv", SearchOption.AllDirectories).Except(s).ToList());
         }
 
         static void Main(string[] args)

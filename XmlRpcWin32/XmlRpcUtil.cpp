@@ -13,6 +13,12 @@
 
 using namespace XmlRpc;
 
+#ifdef USE_CLR
+#include <msclr\marshal_cppstd.h>
+
+using namespace msclr::interop;
+#endif
+
 
 //#define USE_WINDOWS_DEBUG // To make the error and log messages go to VC++ debug output
 #ifdef USE_WINDOWS_DEBUG
@@ -82,6 +88,32 @@ void XmlRpcUtil::OUTFN(const char *str)
 int XmlRpc::getVerbosity() { return XmlRpcLogHandler::getVerbosity(); }
 void XmlRpc::setVerbosity(int level) { XmlRpcLogHandler::setVerbosity(level); }
 
+#ifdef USE_CLR
+
+//#ifdef __cplusplus_cli
+void XmlRpcUtil::log(int level, const char* fmt, ...array<Object^> ^args)
+{
+	System::String^ format = gcnew String(fmt);
+	String^ str = String::Format(format, args);
+	std::string buffer = marshal_as<std::string>(str);
+
+  if (level <= XmlRpcLogHandler::getVerbosity())
+  {
+    OUTFN(buffer.c_str());
+    XmlRpcLogHandler::getLogHandler()->log(level, buffer.c_str());
+  }
+}
+
+
+void XmlRpcUtil::error(const char* fmt, ...array<Object^> ^args)
+{
+	System::String^ format = gcnew String(fmt);
+	String^ str = String::Format(format, args);
+	std::string buffer = marshal_as<std::string>(str);
+  OUTFN(buffer.c_str());
+  XmlRpcErrorHandler::getErrorHandler()->error(buffer.c_str());
+}
+#else
 void XmlRpcUtil::log(int level, const char* fmt, ...)
 {
   va_list va;
@@ -107,7 +139,7 @@ void XmlRpcUtil::error(const char* fmt, ...)
   OUTFN(buf);
   XmlRpcErrorHandler::getErrorHandler()->error(buf);
 }
-
+#endif
 
 // Returns contents between <tag> and </tag>, updates offset to char after </tag>
 std::string 

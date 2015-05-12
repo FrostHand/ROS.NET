@@ -1,3 +1,7 @@
+#ifdef USE_CLR
+using namespace System;
+#endif
+
 #ifndef _XMLRPCUTIL_H_
 #define _XMLRPCUTIL_H_
 
@@ -54,12 +58,24 @@ namespace XmlRpc {
     //! Convert encoded xml to raw text
     static std::string xmlDecode(const std::string& encoded);
 
+#ifdef USE_CLR
+	/*
+	String ^FormatAString(String ^format, ...array<Object^> ^args)
+{
+  return String::Format(format, args);
+}*/
+	//! Dump messages somewhere
+    static void log(int level, const char* fmt, ...array<Object^> ^args);
 
+    //! Dump error messages somewhere
+    static void error(const char* fmt, ...array<Object^> ^args);
+#else
     //! Dump messages somewhere
     static void log(int level, const char* fmt, ...);
 
     //! Dump error messages somewhere
     static void error(const char* fmt, ...);
+#endif
   };
 } // namespace XmlRpc
 

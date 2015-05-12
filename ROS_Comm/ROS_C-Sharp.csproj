@@ -109,10 +109,6 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="MathNet.Numerics, Version=3.0.2.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\mathnet-spatial\packages\MathNet.Numerics\lib\net35\MathNet.Numerics.dll</HintPath>
-    </Reference>
     <Reference Include="Messages">
       <HintPath>..\Messages\Messages.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
@@ -122,6 +118,9 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="UnityEngine">
+      <HintPath>D:\tools\Unity5\Editor\Data\Managed\UnityEngine.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdvertiseOptions.cs" />
@@ -213,10 +212,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\mathnet-spatial\src\Spatial\Spatial.csproj">
-      <Project>{1F3364C6-9DA3-4006-B83F-6D1335099895}</Project>
-      <Name>Spatial</Name>
-    </ProjectReference>
     <ProjectReference Include="..\XmlRpc_Wrapper\XmlRpc_Wrapper.csproj">
       <Project>{8B7DB66C-9C03-4078-9276-B6A760CD4C2C}</Project>
       <Name>XmlRpc_Wrapper</Name>

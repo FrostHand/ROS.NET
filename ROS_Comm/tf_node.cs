@@ -22,8 +22,10 @@ using Messages.tf;
 using gm = Messages.geometry_msgs;
 using Int64 = System.Int64;
 using String = Messages.std_msgs.String;
-using MathNet.Spatial;
-using Vector3 = MathNet.Spatial.Vector3D;
+//using UnityEngine;
+//using MathNet.Spatial;
+using Vector3 = UnityEngine.Vector3;//MathNet.Spatial.Vector3D;
+using Quaternion = UnityEngine.Quaternion;
 #endregion
 
 namespace Ros_CSharp
@@ -1102,9 +1104,9 @@ namespace Ros_CSharp
         public static emVector3 operator *(emTransform t, emVector3 v)
         {
             emMatrix3x3 mat = new emMatrix3x3(t.basis);
-            return new emVector3(mat.m_el[0].vec.DotProduct(v.vec) + t.origin.x,
-                mat.m_el[1].vec.DotProduct(v.vec) + t.origin.y,
-                mat.m_el[2].vec.DotProduct(v.vec) + t.origin.z);
+			return new emVector3(Vector3.Dot(mat.m_el[0].vec, v.vec) + t.origin.x,
+				Vector3.Dot(mat.m_el[1].vec, v.vec) + t.origin.y,
+				Vector3.Dot(mat.m_el[2].vec, v.vec) + t.origin.z);
         }
         
         public static emQuaternion operator *(emTransform t, emQuaternion q)
@@ -1120,26 +1122,26 @@ namespace Ros_CSharp
 
         public double w
         {
-            set { quat = new Quaternion(value, x, y, z); }
-            get { return quat.Real; }
+			set { quat = new Quaternion((float)value, (float)x, (float)y, (float)z); }
+            get { return quat.w; }
         }
 
         public double x
         {
-            set { quat = new Quaternion(w, value, y, z); }
-            get { return quat.ImagX; }
+			set { quat = new Quaternion((float)w, (float)value, (float)y, (float)z); }
+            get { return quat.x; }
         }
 
         public double y
         {
-            set { quat = new Quaternion(w, x, value, z); }
-            get { return quat.ImagY; }
+			set { quat = new Quaternion((float)w, (float)x, (float)value, (float)z); }
+            get { return quat.y; }
         }
 
         public double z
         {
-            set { quat = new Quaternion(w, x, y, value); }
-            get { return quat.ImagZ; }
+			set { quat = new Quaternion((float)w, (float)x, (float)y, (float)value); }
+            get { return quat.z; }
         }
 
         public emQuaternion() : this(new Quaternion(1,0,0,0))
@@ -1153,7 +1155,7 @@ namespace Ros_CSharp
 
         public emQuaternion(double W, double X, double Y, double Z)
         {
-            quat = new Quaternion(W, X, Y, Z);
+			quat = new Quaternion((float)W, (float)X, (float)Y, (float)Z);
         }
 
         public emQuaternion(emQuaternion shallow)
@@ -1170,7 +1172,7 @@ namespace Ros_CSharp
         {
             return new gm.Quaternion {w = w, x = x, y = y, z = z};
         }
-
+		/*
         public static emQuaternion operator +(emQuaternion v1, emQuaternion v2)
         {
             return new emQuaternion(v1.quat + v2.quat);
@@ -1204,13 +1206,13 @@ namespace Ros_CSharp
         public static emQuaternion operator *(double d, emQuaternion v1)
         {
             return new emQuaternion(d * v1.quat);
-        }
+        }*/
 
         public static emQuaternion operator *(emQuaternion v1, emQuaternion v2)
         {
             return new emQuaternion(v1.quat * v2.quat);
         }
-
+		/*
         public static emQuaternion operator /(emQuaternion v1, float s)
         {
             return new emQuaternion(v1.quat / s);
@@ -1224,11 +1226,12 @@ namespace Ros_CSharp
         public static emQuaternion operator /(emQuaternion v1, double s)
         {
             return new emQuaternion(v1.quat / s);
-        }
+        }*/
 
         public emQuaternion inverse()
         {
-            return new emQuaternion(quat.Inverse());
+			
+            return new emQuaternion(Quaternion.Inverse(quat));
         }
 
         public double dot(emQuaternion q)
@@ -1238,12 +1241,12 @@ namespace Ros_CSharp
 
         public double length2()
         {
-            return quat.Abs * quat.Abs;
+            return dot(this);
         }
 
         public double length()
         {
-            return quat.Abs;
+            return Math.Sqrt(length2());
         }
 
         public override string ToString()
@@ -1311,7 +1314,7 @@ namespace Ros_CSharp
 
         public double angleShortestPath(emQuaternion q)
         {
-            return Quaternion.Distance(quat, q.quat);
+            return Quaternion.Angle(quat, q.quat);
         }
 
         public emQuaternion slerp(emQuaternion q, double t)
@@ -1345,18 +1348,18 @@ namespace Ros_CSharp
 
         public double x
         {
-            get { return vec.X; }
-            set { vec = new Vector3(value, y, z); }
+            get { return vec.x; }
+			set { vec = new Vector3((float)value, (float)y, (float)z); }
         }
         public double y
         {
-            get { return vec.Y; }
-            set { vec = new Vector3(x, value, z); }
+            get { return vec.y; }
+			set { vec = new Vector3((float)x, (float)value, (float)z); }
         }
         public double z
         {
-            get { return vec.Z; }
-            set { vec = new Vector3(x, y, value); }
+            get { return vec.z; }
+			set { vec = new Vector3((float)x, (float)y, (float)value); }
         }
 
         public emVector3() : this(0,0,0)
@@ -1368,7 +1371,8 @@ namespace Ros_CSharp
             vec = v;
         }
 
-        public emVector3(double X, double Y, double Z) : this(new Vector3(X,Y,Z))
+		public emVector3(double X, double Y, double Z)
+			: this(new Vector3((float)X, (float)Y, (float)Z))
         {
         }
 
@@ -1404,10 +1408,10 @@ namespace Ros_CSharp
         {
             return new emVector3(d * v1.vec);
         }
-
+	
         public static emVector3 operator *(emVector3 v1, double d)
         {
-            return new emVector3(d * v1.vec);
+            return new emVector3((float)d * v1.vec);
         }
 
         public static emVector3 operator *(float d, emVector3 v1)
@@ -1422,7 +1426,7 @@ namespace Ros_CSharp
 
         public static emVector3 operator *(double d, emVector3 v1)
         {
-            return new emVector3(d * v1.vec);
+            return new emVector3((float)d * v1.vec);
         }
 
         public override string ToString()

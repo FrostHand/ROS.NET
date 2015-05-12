@@ -13,7 +13,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 
 using Ros_CSharp;
-using XmlRpc_Wrapper;
+//using XmlRpc_Wrapper;
 using Messages;
 using System.Threading;
 
